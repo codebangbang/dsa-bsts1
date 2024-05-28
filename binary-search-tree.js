@@ -15,19 +15,29 @@ class BinarySearchTree {
    * Returns the tree. Uses iteration. */
 
   insert(val) {
-    const insertNode = (node, val) => {
-      if (node === null) {
-        return new Node(val);
-      }
-      if (val < node.val) {
-        node.left = insertNode(node.left, val);
+    const insertNode = new Node(val);
+    if (this.root === null) {
+      this.root = insertNode;
+      return this;
+    }
+    let current = this.root;
+    while (true) {
+      if (val < current.val) {
+        if (current.left === null) {
+          current.left = insertNode;
+          return this;
+        } else {
+          current = current.left;
+        }
       } else {
-        node.right = insertNode(node.right, val);
+        if (current.right === null) {
+          current.right = insertNode;
+          return this;
+        } else {
+          current = current.right;
+        }
       }
-      return node;
-    };
-
-    this.root = insertNode(this.root, val);
+    }
   }
 
   /** insertRecursively(val): insert a new node into the BST with value val.
@@ -36,60 +46,59 @@ class BinarySearchTree {
   insertRecursively(val, node = this.root) {
     if (this.root === null) {
       this.root = new Node(val);
-      return;
+      return this;
     }
 
     if (val < node.val) {
       if (node.left === null) {
         node.left = new Node(val);
-        return;
+        return this;
       } else {
         this.insertRecursively(val, node.left);
       }
     } else {
       if (node.right === null) {
         node.right = new Node(val);
-        return;
+        return this;
       } else {
         this.insertRecursively(val, node.right);
       }
     }
+    return this;
   }
 
   /** find(val): search the tree for a node with value val.
    * return the node, if found; else undefined. Uses iteration. */
 
   find(val) {
-    const findNode = (node, val) => {
-      if (node === null) {
-        return null;
-      }
-      if (val === node.val) {
-        return node;
-      }
-      if (val < node.val) {
-        return findNode(node.left, val);
+    let current = this.root;
+    while (current) {
+      if (val === current.val) {
+        return current;
+      } else if (val < current.val) {
+        current = current.left;
       } else {
-        return findNode(node.right, val);
+        current = current.right;
       }
-    };
-    return findNode(this.root, val);
+    }
+    return undefined;
   }
 
   /** findRecursively(val): search the tree for a node with value val.
    * return the node, if found; else undefined. Uses recursion. */
 
-  findRecursively(val, Node = this.root) {
-    if (Node === null) {
-      return null;
+  findRecursively(val, node = this.root) {
+    if (node === null) {
+      return undefined;
     }
-    if (val === Node.val) {
-      return Node;
+
+    if (val === node.val) {
+      return node;
     }
-    if (val < Node.val) {
-      return this.findRecursively(val, Node.left);
+    if (val < node.val) {
+      return this.findRecursively(val, node.left);
     } else {
-      return this.findRecursively(val, Node.right);
+      return this.findRecursively(val, node.right);
     }
   }
 
@@ -140,7 +149,7 @@ class BinarySearchTree {
 
   bfs() {
     const visited = [];
-    const queue = [this.root];
+    const queue = [];
     if (this.root !== null) {
       queue.push(this.root);
     }
@@ -157,26 +166,6 @@ class BinarySearchTree {
     }
     return visited;
   }
-
-  /** Further Study!
-   * remove(val): Removes a node in the BST with the value val.
-   * Returns the removed node. */
-
-  remove(val) {}
-
-  /** Further Study!
-   * isBalanced(): Returns true if the BST is balanced, false otherwise. */
-
-  isBalanced() {}
-
-  /** Further Study!
-   * findSecondHighest(): Find the second highest value in the BST, if it exists.
-   * Otherwise return undefined. */
-
-  findSecondHighest() {}
 }
 
-export default BinarySearchTree;
-
-/** bfs(): Traverse the array using BFS.
- * Return an array of visited nodes. */
+module.exports = BinarySearchTree;
